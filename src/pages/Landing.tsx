@@ -1,13 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, Wallet, TrendingDown, Leaf, CheckCircle2, Clock, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import heroImage from "@/assets/hero-covoiturage.jpg";
 
 export default function Landing() {
   return (
     <div className="min-h-screen">
+      {/* Top Header with Language and Theme */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+        <div className="container mx-auto px-6 py-3">
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
+            <div className="text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Covoiturage Guinée
+            </div>
+            <div className="flex items-center gap-3">
+              <LanguageSelector />
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden pt-16">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
