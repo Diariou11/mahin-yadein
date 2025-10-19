@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star, Users, Clock, Shield, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { GuineaMap } from "@/components/GuineaMap";
+import { useState } from "react";
 
 const mockRides = [
   {
@@ -52,6 +54,7 @@ const mockRides = [
 
 export default function SearchRides() {
   const navigate = useNavigate();
+  const [showMap, setShowMap] = useState(false);
 
   return (
     <Layout>
@@ -156,10 +159,19 @@ export default function SearchRides() {
             ))}
           </div>
 
+          {/* Interactive Guinea Map */}
+          <div className="mt-6">
+            <GuineaMap onCitySelect={(city) => console.log("Selected city:", city)} />
+          </div>
+
           {/* Map View Toggle */}
-          <Button variant="outline" className="w-full mt-6">
+          <Button
+            variant="outline"
+            className="w-full mt-6"
+            onClick={() => setShowMap(!showMap)}
+          >
             <MapPin className="mr-2 w-4 h-4" />
-            Voir sur la carte
+            {showMap ? "Voir la liste" : "Voir sur la carte"}
           </Button>
         </div>
       </div>

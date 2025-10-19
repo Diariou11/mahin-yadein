@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import OnboardingPassenger from "./pages/OnboardingPassenger";
 import OnboardingDriver from "./pages/OnboardingDriver";
 import Home from "./pages/Home";
@@ -34,6 +36,8 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="/onboarding-passenger" element={<OnboardingPassenger />} />
               <Route path="/onboarding-driver" element={<OnboardingDriver />} />
               <Route path="/home" element={<Home />} />

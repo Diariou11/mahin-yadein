@@ -95,11 +95,11 @@ export default function Payment() {
                   </Label>
                 </div>
                 <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer">
-                  <RadioGroupItem value="cellcom" id="cellcom" />
-                  <Label htmlFor="cellcom" className="flex-1 cursor-pointer">
+                  <RadioGroupItem value="paycard" id="paycard" />
+                  <Label htmlFor="paycard" className="flex-1 cursor-pointer">
                     <div className="flex items-center gap-2">
-                      <div className="text-2xl">🔵</div>
-                      <span className="font-medium">Cellcom</span>
+                      <div className="text-2xl">💳</div>
+                      <span className="font-medium">PayCard</span>
                     </div>
                   </Label>
                 </div>
