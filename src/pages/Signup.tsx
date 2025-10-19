@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, User, Smartphone, Mail, Camera } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<"role" | "info" | "phone" | "code">("role");
-  const [role, setRole] = useState<"passenger" | "driver">("passenger");
+  const [searchParams] = useSearchParams();
+  const typeParam = searchParams.get("type");
+  const [step, setStep] = useState<"role" | "info" | "phone" | "code">(typeParam ? "info" : "role");
+  const [role, setRole] = useState<"passenger" | "driver">(
+    typeParam === "driver" ? "driver" : "passenger"
+  );
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
