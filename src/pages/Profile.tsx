@@ -3,8 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { User, Star, Award, Settings, ChevronRight, History, CreditCard, Bell, HelpCircle, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
+  const navigate = useNavigate();
   return (
     <Layout>
       <div className="min-h-screen pb-8">
@@ -80,7 +82,7 @@ export default function Profile() {
           <div className="space-y-2 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             <h2 className="text-lg font-semibold mb-3">Paramètres</h2>
             
-            <Card className="p-4 cursor-pointer hover:border-primary transition-all">
+            <Card className="p-4 cursor-pointer hover:border-primary transition-all" onClick={() => navigate("/settings")}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Settings className="w-5 h-5 text-muted-foreground" />
@@ -90,7 +92,7 @@ export default function Profile() {
               </div>
             </Card>
 
-            <Card className="p-4 cursor-pointer hover:border-primary transition-all">
+            <Card className="p-4 cursor-pointer hover:border-primary transition-all" onClick={() => navigate("/settings")}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Bell className="w-5 h-5 text-muted-foreground" />
@@ -100,7 +102,7 @@ export default function Profile() {
               </div>
             </Card>
 
-            <Card className="p-4 cursor-pointer hover:border-primary transition-all">
+            <Card className="p-4 cursor-pointer hover:border-primary transition-all" onClick={() => navigate("/settings")}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-5 h-5 text-muted-foreground" />
@@ -110,7 +112,7 @@ export default function Profile() {
               </div>
             </Card>
 
-            <Card className="p-4 cursor-pointer hover:border-primary transition-all">
+            <Card className="p-4 cursor-pointer hover:border-primary transition-all" onClick={() => navigate("/settings")}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <HelpCircle className="w-5 h-5 text-muted-foreground" />
