@@ -172,7 +172,7 @@ export default function PublishRide() {
           {/* Publish Button */}
           <Button
             size="lg"
-            className="w-full animate-pulse-glow"
+            className="w-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
             onClick={handlePublish}
           >
             Publier le trajet

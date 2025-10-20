@@ -55,7 +55,11 @@ export default function Signup() {
       setTimeout(() => {
         setIsLoading(false);
         toast.success("Compte créé avec succès !");
-        navigate(role === "passenger" ? "/onboarding-passenger" : "/onboarding-driver");
+        if (role === "passenger") {
+          navigate("/home");
+        } else {
+          navigate("/driver-dashboard");
+        }
       }, 1500);
     }
   };

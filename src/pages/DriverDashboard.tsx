@@ -61,7 +61,7 @@ export default function DriverDashboard() {
           {/* CTA Publish */}
           <Button
             size="lg"
-            className="w-full mb-6 animate-pulse-glow"
+            className="w-full mb-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
             onClick={() => navigate("/publish-ride")}
           >
             <Plus className="mr-2 w-5 h-5" />

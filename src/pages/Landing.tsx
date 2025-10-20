@@ -5,17 +5,16 @@ import { StatsSection } from "@/components/landing/StatsSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { BestPracticesSection } from "@/components/landing/BestPracticesSection";
 import { CTASection } from "@/components/landing/CTASection";
+import logo from "@/assets/logo.svg";
 
 export default function Landing() {
   return (
     <div className="min-h-screen">
       {/* Top Header with Language and Theme */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm safe-top">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
-            <div className="text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Covoiturage Guinée
-            </div>
+            <img src={logo} alt="Mahin Yadein" className="h-10 hover:scale-105 transition-transform" />
             <div className="flex items-center gap-3">
               <LanguageSelector />
               <ThemeToggle />

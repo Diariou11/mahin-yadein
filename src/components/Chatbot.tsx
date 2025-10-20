@@ -220,7 +220,7 @@ export const Chatbot = () => {
       {!isOpen && (
         <Button
           size="lg"
-          className="fixed bottom-20 right-6 z-50 rounded-full w-14 h-14 shadow-2xl animate-pulse-glow"
+          className="fixed bottom-20 right-6 z-50 rounded-full w-14 h-14 shadow-2xl hover:scale-110 transition-transform"
           onClick={() => setIsOpen(true)}
         >
           <MessageCircle className="w-6 h-6" />

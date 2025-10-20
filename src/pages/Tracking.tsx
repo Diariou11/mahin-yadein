@@ -28,7 +28,7 @@ export default function Tracking() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center p-6">
-              <Navigation className="w-16 h-16 text-primary mx-auto mb-4 animate-pulse" />
+              <Navigation className="w-16 h-16 text-primary mx-auto mb-4" />
               <p className="text-lg font-semibold mb-2">Carte interactive</p>
               <p className="text-sm text-muted-foreground">
                 Position en temps réel du conducteur

@@ -80,7 +80,7 @@ export const GuineaMap = ({ onCitySelect }: GuineaMapProps) => {
             >
               {/* Pulse animation for popular cities */}
               {city.popular && (
-                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+                <div className="absolute inset-0 rounded-full bg-primary/20 animate-[ping_2s_ease-in-out_infinite]" />
               )}
               
               {/* City marker */}
@@ -114,7 +114,7 @@ export const GuineaMap = ({ onCitySelect }: GuineaMapProps) => {
               {/* Connection lines for selected city */}
               {isSelected && (
                 <div className="absolute inset-0 pointer-events-none">
-                  <div className="w-0.5 h-4 bg-accent/50 absolute top-full left-1/2 -translate-x-1/2 animate-pulse" />
+                  <div className="w-0.5 h-4 bg-accent/50 absolute top-full left-1/2 -translate-x-1/2" />
                 </div>
               )}
             </div>
