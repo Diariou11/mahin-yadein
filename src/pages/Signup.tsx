@@ -56,9 +56,9 @@ export default function Signup() {
         setIsLoading(false);
         toast.success("Compte créé avec succès !");
         if (role === "passenger") {
-          navigate("/home");
+          navigate("/onboarding/complete-profile");
         } else {
-          navigate("/driver-dashboard");
+          navigate("/onboarding/driver/complete-profile");
         }
       }, 1500);
     }

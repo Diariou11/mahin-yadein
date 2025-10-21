@@ -10,6 +10,16 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import OnboardingPassenger from "./pages/OnboardingPassenger";
 import OnboardingDriver from "./pages/OnboardingDriver";
+import CompleteProfile from "./pages/onboarding/CompleteProfile";
+import VerifyIdentity from "./pages/onboarding/VerifyIdentity";
+import PaymentMethodSetup from "./pages/onboarding/PaymentMethodSetup";
+import TravelPreferences from "./pages/onboarding/TravelPreferences";
+import OnboardingTutorial from "./pages/onboarding/OnboardingTutorial";
+import DriverCompleteProfile from "./pages/onboarding/driver/DriverCompleteProfile";
+import AddVehicle from "./pages/onboarding/driver/AddVehicle";
+import DriverVerifyDocuments from "./pages/onboarding/driver/DriverVerifyDocuments";
+import DriverPaymentSetup from "./pages/onboarding/driver/DriverPaymentSetup";
+import DriverTutorial from "./pages/onboarding/driver/DriverTutorial";
 import Home from "./pages/Home";
 import SearchRides from "./pages/SearchRides";
 import RideDetail from "./pages/RideDetail";
@@ -36,10 +46,20 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/onboarding-passenger" element={<OnboardingPassenger />} />
-              <Route path="/onboarding-driver" element={<OnboardingDriver />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/onboarding-passenger" element={<OnboardingPassenger />} />
+          <Route path="/onboarding-driver" element={<OnboardingDriver />} />
+          <Route path="/onboarding/complete-profile" element={<CompleteProfile />} />
+          <Route path="/onboarding/verify-identity" element={<VerifyIdentity />} />
+          <Route path="/onboarding/payment-method" element={<PaymentMethodSetup />} />
+          <Route path="/onboarding/travel-preferences" element={<TravelPreferences />} />
+          <Route path="/onboarding/tutorial" element={<OnboardingTutorial />} />
+          <Route path="/onboarding/driver/complete-profile" element={<DriverCompleteProfile />} />
+          <Route path="/onboarding/driver/add-vehicle" element={<AddVehicle />} />
+          <Route path="/onboarding/driver/verify-documents" element={<DriverVerifyDocuments />} />
+          <Route path="/onboarding/driver/payment-setup" element={<DriverPaymentSetup />} />
+          <Route path="/onboarding/driver/tutorial" element={<DriverTutorial />} />
               <Route path="/home" element={<Home />} />
               <Route path="/search" element={<SearchRides />} />
               <Route path="/ride/:id" element={<RideDetail />} />
