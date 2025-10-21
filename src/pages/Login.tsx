@@ -42,7 +42,16 @@ export default function Login() {
     setTimeout(() => {
       setIsLoading(false);
       toast.success("Connexion réussie !");
-      navigate("/home");
+      
+      // Get user role from localStorage
+      const userRole = localStorage.getItem("userRole") || "passenger";
+      
+      // Navigate based on user role
+      if (userRole === "driver") {
+        navigate("/driver-dashboard");
+      } else {
+        navigate("/home");
+      }
     }, 1500);
   };
 

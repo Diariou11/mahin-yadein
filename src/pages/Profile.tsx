@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { User, Star, Award, Settings, ChevronRight, History, CreditCard, Bell, HelpCircle, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const userRole = localStorage.getItem("userRole") || "passenger";
+  const isDriver = userRole === "driver";
+
   return (
     <Layout>
       <div className="min-h-screen pb-8">
@@ -22,12 +26,17 @@ export default function Profile() {
                   Mamadou Diallo
                 </h1>
                 <p className="text-primary-foreground/80">+224 622 123 456</p>
+                <Badge className="mt-2 bg-primary-foreground/20 text-primary-foreground">
+                  {isDriver ? "Conducteur" : "Passager"}
+                </Badge>
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
               <Card className="p-3 text-center bg-card/80 backdrop-blur">
-                <div className="text-2xl font-bold text-primary mb-1">12</div>
+                <div className="text-2xl font-bold text-primary mb-1">
+                  {isDriver ? "24" : "12"}
+                </div>
                 <div className="text-xs text-muted-foreground">Trajets</div>
               </Card>
               <Card className="p-3 text-center bg-card/80 backdrop-blur">
@@ -67,13 +76,13 @@ export default function Profile() {
             <h2 className="text-lg font-semibold mb-3">Mes badges</h2>
             <div className="flex gap-2 overflow-x-auto pb-2">
               <Badge className="px-4 py-2 bg-secondary text-secondary-foreground whitespace-nowrap">
-                Passager vérifié
+                {isDriver ? "Conducteur vérifié" : "Passager vérifié"}
               </Badge>
               <Badge variant="outline" className="px-4 py-2 whitespace-nowrap">
-                10 trajets
+                {isDriver ? "24 trajets" : "10 trajets"}
               </Badge>
               <Badge variant="outline" className="px-4 py-2 whitespace-nowrap">
-                5★ Super passager
+                {isDriver ? "5★ Super conducteur" : "5★ Super passager"}
               </Badge>
             </div>
           </div>
@@ -122,7 +131,15 @@ export default function Profile() {
               </div>
             </Card>
 
-            <Card className="p-4 cursor-pointer hover:border-destructive transition-all mt-4">
+            <Card 
+              className="p-4 cursor-pointer hover:border-destructive transition-all mt-4"
+              onClick={() => {
+                localStorage.removeItem("userRole");
+                localStorage.removeItem("userPhone");
+                toast.success("Déconnexion réussie");
+                navigate("/");
+              }}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <LogOut className="w-5 h-5 text-destructive" />

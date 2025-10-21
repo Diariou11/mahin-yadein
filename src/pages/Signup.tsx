@@ -54,6 +54,9 @@ export default function Signup() {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
+        // Store user role in localStorage
+        localStorage.setItem("userRole", role);
+        localStorage.setItem("userPhone", formData.phone);
         toast.success("Compte créé avec succès !");
         if (role === "passenger") {
           navigate("/onboarding/complete-profile");
