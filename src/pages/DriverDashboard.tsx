@@ -2,7 +2,20 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, TrendingUp, Users, Star, Calendar, Sparkles } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Plus, 
+  TrendingUp, 
+  Users, 
+  Star, 
+  Calendar, 
+  Sparkles,
+  MapPin,
+  Clock,
+  ChevronRight,
+  Navigation,
+  MessageCircle
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function DriverDashboard() {
@@ -84,43 +97,96 @@ export default function DriverDashboard() {
             </div>
           </Card>
 
-          {/* Upcoming Rides */}
-          <div className="mb-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <h2 className="text-lg font-semibold mb-3">Trajets à venir</h2>
-            <Card className="p-4 cursor-pointer hover:border-primary transition-all">
-              <div className="flex items-center justify-between mb-3">
+          {/* Prochain trajet */}
+          <Card className="p-4 mb-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Prochain trajet</h2>
+              <Badge className="bg-secondary text-secondary-foreground">Confirmé</Badge>
+            </div>
+
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-primary" />
                 <div>
-                  <div className="font-semibold">Conakry → Kindia</div>
-                  <div className="text-sm text-muted-foreground">Demain • 14:00</div>
+                  <p className="font-medium">Conakry → Kindia</p>
+                  <p className="text-sm text-muted-foreground">135 km</p>
                 </div>
-                <Badge className="bg-secondary text-secondary-foreground">3/4 places</Badge>
               </div>
+              <div className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-secondary" />
+                <p className="text-sm">Aujourd'hui à 15:00</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-muted rounded-lg mb-3">
               <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-muted-foreground" />
-                <div className="flex -space-x-2">
-                  {["MD", "FB", "IS"].map((initial, i) => (
-                    <div
-                      key={i}
-                      className="w-8 h-8 rounded-full bg-primary/20 border-2 border-background flex items-center justify-center text-xs font-semibold text-primary"
-                    >
-                      {initial}
-                    </div>
-                  ))}
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback>AB</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-medium">Aissatou Bah</p>
+                  <p className="text-xs text-muted-foreground">2 places</p>
                 </div>
-                <span className="text-sm text-muted-foreground ml-2">Passagers confirmés</span>
               </div>
-            </Card>
-          </div>
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 fill-secondary text-secondary" />
+                <span className="text-sm font-medium">4.8</span>
+              </div>
+            </div>
+
+            <Button className="w-full" onClick={() => navigate("/driver/trip-in-progress")}>
+              <Navigation className="w-4 h-4 mr-2" />
+              Démarrer le trajet
+            </Button>
+          </Card>
+
+          {/* Demandes de réservation */}
+          <Card className="p-4 mb-6 animate-fade-in" style={{ animationDelay: "0.5s" }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Demandes en attente</h2>
+              <Badge variant="outline">2 nouvelles</Badge>
+            </div>
+
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-10 h-10">
+                    <AvatarImage src="/placeholder.svg" />
+                    <AvatarFallback>IS</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">Ibrahima Sow</p>
+                    <p className="text-sm text-muted-foreground">1 place</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </div>
+            </div>
+
+            <Button variant="outline" className="w-full" onClick={() => navigate("/driver/manage-bookings")}>
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Voir toutes les demandes
+            </Button>
+          </Card>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-3 animate-fade-in" style={{ animationDelay: "0.5s" }}>
-            <Button variant="outline" className="flex flex-col h-auto py-4">
+          <div className="grid grid-cols-2 gap-3 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-4"
+              onClick={() => navigate("/driver/profile")}
+            >
+              <Users className="w-5 h-5 mb-2" />
+              <span className="text-sm">Mon profil</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-4"
+              onClick={() => navigate("/rides")}
+            >
               <Calendar className="w-5 h-5 mb-2" />
               <span className="text-sm">Historique</span>
-            </Button>
-            <Button variant="outline" className="flex flex-col h-auto py-4">
-              <TrendingUp className="w-5 h-5 mb-2" />
-              <span className="text-sm">Statistiques</span>
             </Button>
           </div>
         </div>

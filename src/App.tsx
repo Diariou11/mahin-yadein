@@ -20,6 +20,10 @@ import AddVehicle from "./pages/onboarding/driver/AddVehicle";
 import DriverVerifyDocuments from "./pages/onboarding/driver/DriverVerifyDocuments";
 import DriverPaymentSetup from "./pages/onboarding/driver/DriverPaymentSetup";
 import DriverTutorial from "./pages/onboarding/driver/DriverTutorial";
+import DriverProfile from "./pages/driver/DriverProfile";
+import ManageBookings from "./pages/driver/ManageBookings";
+import TripInProgress from "./pages/driver/TripInProgress";
+import TripComplete from "./pages/driver/TripComplete";
 import Home from "./pages/Home";
 import SearchRides from "./pages/SearchRides";
 import RideDetail from "./pages/RideDetail";
@@ -60,7 +64,14 @@ const App = () => (
           <Route path="/onboarding/driver/verify-documents" element={<DriverVerifyDocuments />} />
           <Route path="/onboarding/driver/payment-setup" element={<DriverPaymentSetup />} />
           <Route path="/onboarding/driver/tutorial" element={<DriverTutorial />} />
-              <Route path="/home" element={<Home />} />
+          
+          {/* Driver Pages */}
+          <Route path="/driver/profile" element={<DriverProfile />} />
+          <Route path="/driver/manage-bookings" element={<ManageBookings />} />
+          <Route path="/driver/trip-in-progress" element={<TripInProgress />} />
+          <Route path="/driver/trip-complete" element={<TripComplete />} />
+          
+          <Route path="/home" element={<Home />} />
               <Route path="/search" element={<SearchRides />} />
               <Route path="/ride/:id" element={<RideDetail />} />
               <Route path="/payment" element={<Payment />} />
