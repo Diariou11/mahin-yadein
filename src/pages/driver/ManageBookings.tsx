@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, Phone, MessageCircle, CheckCircle, XCircle, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getProfileImage } from "@/utils/avatarHelper";
 
 interface BookingRequest {
   id: string;
@@ -35,7 +36,7 @@ export default function ManageBookings() {
       id: "1",
       passenger: {
         name: "Aissatou Bah",
-        avatar: "/placeholder.svg",
+        avatar: getProfileImage("Aissatou Bah"),
         rating: 4.8,
         trips: 23,
         badge: "Passager vérifié"
@@ -53,7 +54,7 @@ export default function ManageBookings() {
       id: "2",
       passenger: {
         name: "Ibrahima Sow",
-        avatar: "/placeholder.svg",
+        avatar: getProfileImage("Ibrahima Sow"),
         rating: 5.0,
         trips: 45,
         badge: "Super passager"
@@ -87,7 +88,7 @@ export default function ManageBookings() {
   const acceptedBookings = bookings.filter(b => b.status === "accepted");
 
   return (
-    <Layout>
+    <Layout isDriver={true}>
       <div className="min-h-screen pb-8">
         <div className="bg-gradient-to-br from-primary via-primary/90 to-secondary p-6 mb-6">
           <h1 className="text-2xl font-bold text-primary-foreground mb-2">

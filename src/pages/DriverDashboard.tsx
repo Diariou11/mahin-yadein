@@ -17,12 +17,15 @@ import {
   MessageCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getProfileImage } from "@/utils/avatarHelper";
 
 export default function DriverDashboard() {
   const navigate = useNavigate();
+  const passengerName = "Aissatou Bah";
+  const passengerName2 = "Ibrahima Sow";
 
   return (
-    <Layout>
+    <Layout isDriver={true}>
       <div className="min-h-screen pb-8">
         {/* Header */}
         <div className="bg-gradient-to-br from-primary via-accent to-primary p-6 pb-12">
@@ -121,7 +124,7 @@ export default function DriverDashboard() {
             <div className="flex items-center justify-between p-3 bg-muted rounded-lg mb-3">
               <div className="flex items-center gap-2">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarImage src={getProfileImage(passengerName)} />
                   <AvatarFallback>AB</AvatarFallback>
                 </Avatar>
                 <div>
@@ -152,7 +155,7 @@ export default function DriverDashboard() {
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10">
-                    <AvatarImage src="/placeholder.svg" />
+                    <AvatarImage src={getProfileImage(passengerName2)} />
                     <AvatarFallback>IS</AvatarFallback>
                   </Avatar>
                   <div>

@@ -14,7 +14,12 @@ export default function Landing() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm safe-top">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
-            <img src={logo} alt="Mahin Yadein" className="h-10 hover:scale-105 transition-transform" />
+            <img 
+              src={logo} 
+              alt="Mahin Yadein" 
+              className="h-12 sm:h-14 cursor-pointer animate-float hover:scale-105 transition-transform" 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            />
             <div className="flex items-center gap-3">
               <LanguageSelector />
               <ThemeToggle />

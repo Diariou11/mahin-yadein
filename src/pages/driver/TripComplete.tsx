@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CheckCircle, Star, TrendingUp, Users, MapPin, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getProfileImage } from "@/utils/avatarHelper";
 
 export default function TripComplete() {
   const navigate = useNavigate();
@@ -16,12 +17,12 @@ export default function TripComplete() {
     {
       id: "1",
       name: "Aissatou Bah",
-      avatar: "/placeholder.svg",
+      avatar: getProfileImage("Aissatou Bah"),
     },
     {
       id: "2",
       name: "Ibrahima Sow",
-      avatar: "/placeholder.svg",
+      avatar: getProfileImage("Ibrahima Sow"),
     }
   ];
 
@@ -40,7 +41,7 @@ export default function TripComplete() {
   };
 
   return (
-    <Layout showNav={false}>
+    <Layout showNav={false} isDriver={true}>
       <div className="min-h-screen pb-8">
         {/* Header de succès */}
         <div className="bg-gradient-to-br from-secondary via-secondary/90 to-primary p-8 text-center">

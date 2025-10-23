@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Navigation, Users, Phone, MessageCircle, MapPin, Clock, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getProfileImage } from "@/utils/avatarHelper";
 
 export default function TripInProgress() {
   const navigate = useNavigate();
@@ -17,14 +18,14 @@ export default function TripInProgress() {
   const passengers = [
     {
       name: "Aissatou Bah",
-      avatar: "/placeholder.svg",
+      avatar: getProfileImage("Aissatou Bah"),
       phone: "+224 622 123 456",
       seats: 2,
       pickupPoint: "Rond-point Cosa"
     },
     {
       name: "Ibrahima Sow",
-      avatar: "/placeholder.svg",
+      avatar: getProfileImage("Ibrahima Sow"),
       phone: "+224 622 789 012",
       seats: 1,
       pickupPoint: "Gare Madina"
@@ -42,7 +43,7 @@ export default function TripInProgress() {
   };
 
   return (
-    <Layout showNav={false}>
+    <Layout showNav={false} isDriver={true}>
       <div className="min-h-screen pb-8">
         {/* Carte GPS (simulation) */}
         <div className="relative h-[50vh] bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20">

@@ -5,19 +5,22 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, Star, Award, TrendingUp, MapPin, Calendar, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getProfileImage } from "@/utils/avatarHelper";
 
 export default function DriverProfile() {
   const navigate = useNavigate();
+  const driverName = "Mamadou Diallo";
+  const profileImage = getProfileImage(driverName);
 
   return (
-    <Layout>
+    <Layout isDriver={true}>
       <div className="min-h-screen pb-8">
         {/* Header avec photo de couverture */}
         <div className="bg-gradient-to-br from-primary via-primary/90 to-secondary h-48 relative">
           <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
             <div className="relative">
               <Avatar className="w-32 h-32 border-4 border-background">
-                <AvatarImage src="/placeholder.svg" />
+                <AvatarImage src={profileImage} />
                 <AvatarFallback className="text-3xl bg-secondary text-secondary-foreground">MD</AvatarFallback>
               </Avatar>
               <Button
