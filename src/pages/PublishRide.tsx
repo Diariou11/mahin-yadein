@@ -29,7 +29,7 @@ export default function PublishRide() {
   };
 
   return (
-    <Layout showNav={false}>
+    <Layout showNav={false} isDriver={true}>
       <div className="min-h-screen pb-8">
         {/* Header */}
         <div className="bg-gradient-to-br from-primary via-accent to-primary p-6">
