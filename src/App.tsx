@@ -37,6 +37,10 @@ import Settings from "./pages/Settings";
 import DriverDashboard from "./pages/DriverDashboard";
 import PublishRide from "./pages/PublishRide";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
+import EmergencyContacts from "./pages/EmergencyContacts";
+import Loyalty from "./pages/Loyalty";
+import Chat from "./pages/Chat";
 
 const queryClient = new QueryClient();
 
@@ -83,6 +87,10 @@ const App = () => (
               <Route path="/settings" element={<Settings />} />
               <Route path="/driver-dashboard" element={<DriverDashboard />} />
               <Route path="/publish-ride" element={<PublishRide />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/emergency-contacts" element={<EmergencyContacts />} />
+              <Route path="/loyalty" element={<Loyalty />} />
+              <Route path="/chat/:conversationId" element={<Chat />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
