@@ -4,12 +4,22 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Search, MapPin, Calendar, Clock, Sparkles, Car } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { userType } = useAuth();
+
+  useEffect(() => {
+    // Redirect to appropriate dashboard based on user type
+    if (userType === 'driver') {
+      navigate('/driver-dashboard');
+    }
+  }, [userType, navigate]);
 
   return (
-    <Layout>
+    <Layout showBackButton={true}>
       <div className="min-h-screen pb-8">
         {/* Header */}
         <div className="bg-gradient-to-br from-primary via-accent to-primary p-6 pb-12">
