@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,9 +8,11 @@ import { ArrowLeft, User, Smartphone, Mail, Camera } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get("type");
   const [step, setStep] = useState<"role" | "info" | "phone" | "code">(typeParam ? "info" : "role");
@@ -21,56 +23,56 @@ export default function Signup() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
-    code: "",
+    password: "",
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === "role") {
       setStep("info");
     } else if (step === "info") {
-      if (!formData.firstName || !formData.lastName || !formData.email) {
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
         toast.error("Veuillez remplir tous les champs");
         return;
       }
-      setStep("phone");
-    } else if (step === "phone") {
-      if (!formData.phone || formData.phone.length < 9) {
-        toast.error("Veuillez entrer un numéro valide");
+      if (formData.password !== formData.confirmPassword) {
+        toast.error("Les mots de passe ne correspondent pas");
         return;
       }
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        setStep("code");
-        toast.success("Code envoyé par SMS !");
-      }, 1500);
-    } else if (step === "code") {
-      if (!formData.code || formData.code.length !== 6) {
-        toast.error("Veuillez entrer le code à 6 chiffres");
+      if (formData.password.length < 6) {
+        toast.error("Le mot de passe doit contenir au moins 6 caractères");
         return;
       }
+      
       setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        // Store user role in localStorage
-        localStorage.setItem("userRole", role);
-        localStorage.setItem("userPhone", formData.phone);
+      try {
+        const { error } = await signUp(formData.email, formData.password, role);
+        
+        if (error) {
+          toast.error(error.message);
+          setIsLoading(false);
+          return;
+        }
+        
         toast.success("Compte créé avec succès !");
+        setIsLoading(false);
+        
+        // Navigate based on role
         if (role === "passenger") {
           navigate("/onboarding/complete-profile");
         } else {
           navigate("/onboarding/driver/complete-profile");
         }
-      }, 1500);
+      } catch (error: any) {
+        toast.error("Une erreur est survenue lors de l'inscription");
+        setIsLoading(false);
+      }
     }
   };
 
   const handleBack = () => {
-    if (step === "code") setStep("phone");
-    else if (step === "phone") setStep("info");
-    else if (step === "info") setStep("role");
+    if (step === "info" && !typeParam) setStep("role");
     else navigate("/");
   };
 
@@ -88,11 +90,11 @@ export default function Signup() {
         <Card className="p-8 animate-scale-in">
           {/* Progress Indicator */}
           <div className="flex gap-2 mb-8">
-            {["role", "info", "phone", "code"].map((s, i) => (
+            {(typeParam ? ["info"] : ["role", "info"]).map((s, i) => (
               <div
                 key={s}
                 className={`flex-1 h-1 rounded-full transition-all ${
-                  ["role", "info", "phone", "code"].indexOf(step) >= i
+                  (typeParam ? ["info"] : ["role", "info"]).indexOf(step) >= i
                     ? "bg-primary"
                     : "bg-muted"
                 }`}
@@ -213,6 +215,34 @@ export default function Signup() {
                       className="pl-10"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="password">Mot de passe</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    placeholder="••••••"
+                    className="mt-2"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(e) =>
+                      setFormData({ ...formData, confirmPassword: e.target.value })
+                    }
+                    placeholder="••••••"
+                    className="mt-2"
+                  />
                 </div>
               </div>
 

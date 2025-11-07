@@ -13,6 +13,13 @@ export const useAuth = () => {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        
+        // Get user type from metadata
+        if (session?.user) {
+          const type = session.user.user_metadata?.user_type as 'passenger' | 'driver';
+          setUserType(type || 'passenger');
+        }
+        
         setLoading(false);
       }
     );
@@ -20,6 +27,13 @@ export const useAuth = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      
+      // Get user type from metadata
+      if (session?.user) {
+        const type = session.user.user_metadata?.user_type as 'passenger' | 'driver';
+        setUserType(type || 'passenger');
+      }
+      
       setLoading(false);
     });
 
@@ -27,7 +41,17 @@ export const useAuth = () => {
   }, []);
 
   const signUp = async (email: string, password: string, userTypeChoice: 'passenger' | 'driver' = 'passenger') => {
-    const result = await supabase.auth.signUp({ email, password });
+    const redirectUrl = `${window.location.origin}/`;
+    const result = await supabase.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: {
+          user_type: userTypeChoice
+        }
+      }
+    });
     setUserType(userTypeChoice);
     return result;
   };
