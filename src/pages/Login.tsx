@@ -1,54 +1,34 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Mail, Lock } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, User, Car } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, userType } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"passenger" | "driver">("passenger");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast.error("Veuillez remplir tous les champs");
-      return;
-    }
-
+  const handleLogin = () => {
     setIsLoading(true);
-    try {
-      const { error } = await signIn(email, password);
-      
-      if (error) {
-        toast.error(error.message);
-        setIsLoading(false);
-        return;
-      }
-      
-      toast.success("Connexion réussie !");
-      
-      // Wait a bit for userType to be loaded, then navigate
-      setTimeout(() => {
-        setIsLoading(false);
-        // Navigate based on user type
-        if (userType === "driver") {
-          navigate("/driver-dashboard");
-        } else {
-          navigate("/home");
-        }
-      }, 500);
-    } catch (error: any) {
-      toast.error("Une erreur est survenue lors de la connexion");
+    
+    // Simulation de connexion
+    localStorage.setItem("demo_user_type", role);
+    localStorage.setItem("demo_authenticated", "true");
+    
+    toast.success("Connexion réussie !");
+    
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      if (role === "driver") {
+        navigate("/driver-dashboard");
+      } else {
+        navigate("/home");
+      }
+    }, 500);
   };
 
   return (
@@ -64,55 +44,62 @@ export default function Login() {
 
         <Card className="p-8 animate-scale-in">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-primary-foreground" />
-            </div>
-            <h1 className="text-2xl font-bold mb-2">Connexion</h1>
+            <h1 className="text-2xl font-bold mb-2">Démo - Connexion</h1>
             <p className="text-muted-foreground">
-              Connectez-vous à votre compte
+              Choisissez votre profil pour la démonstration
             </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <div className="relative mt-2">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="mamadou@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
+          <div className="space-y-6">
+            <RadioGroup value={role} onValueChange={(v) => setRole(v as "passenger" | "driver")}>
+              <div
+                className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  role === "passenger" ? "border-primary bg-primary/5" : "border-border"
+                }`}
+                onClick={() => setRole("passenger")}
+              >
+                <RadioGroupItem value="passenger" id="passenger" />
+                <Label htmlFor="passenger" className="flex-1 cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <User className="w-5 h-5" />
+                    <div>
+                      <div className="font-semibold">Passager</div>
+                      <div className="text-sm text-muted-foreground">
+                        Rechercher et réserver des trajets
+                      </div>
+                    </div>
+                  </div>
+                </Label>
               </div>
-            </div>
 
-            <div>
-              <Label htmlFor="password">Mot de passe</Label>
-              <div className="relative mt-2">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
-                  required
-                />
+              <div
+                className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  role === "driver" ? "border-accent bg-accent/5" : "border-border"
+                }`}
+                onClick={() => setRole("driver")}
+              >
+                <RadioGroupItem value="driver" id="driver" />
+                <Label htmlFor="driver" className="flex-1 cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <Car className="w-5 h-5" />
+                    <div>
+                      <div className="font-semibold">Conducteur</div>
+                      <div className="text-sm text-muted-foreground">
+                        Proposer des trajets et gérer mes réservations
+                      </div>
+                    </div>
+                  </div>
+                </Label>
               </div>
-            </div>
+            </RadioGroup>
 
             <Button
-              type="submit"
+              onClick={handleLogin}
               disabled={isLoading}
               className="w-full"
               size="lg"
             >
-              {isLoading ? "Connexion..." : "Se connecter"}
+              {isLoading ? "Connexion..." : "Accéder à la démo"}
             </Button>
 
             <div className="text-center text-sm">
@@ -121,7 +108,7 @@ export default function Login() {
                 S'inscrire
               </Link>
             </div>
-          </form>
+          </div>
         </Card>
 
         <p className="text-center text-sm text-primary-foreground/80 mt-6">
