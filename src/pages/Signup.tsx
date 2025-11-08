@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft, User, Smartphone, Mail, Camera } from "lucide-react";
+import { ArrowLeft, User, Mail, Camera } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -252,104 +252,6 @@ export default function Signup() {
             </div>
           )}
 
-          {/* Phone Verification */}
-          {step === "phone" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Smartphone className="w-8 h-8 text-primary-foreground" />
-                </div>
-                <h1 className="text-2xl font-bold mb-2">Votre numéro</h1>
-                <p className="text-muted-foreground">
-                  Pour sécuriser votre compte
-                </p>
-              </div>
-
-              <div>
-                <Label htmlFor="phone">Numéro de téléphone</Label>
-                <div className="relative mt-2">
-                  <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+224 622 123 456"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="pl-10"
-                    maxLength={12}
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Vous recevrez un code de vérification par SMS
-                </p>
-              </div>
-
-              <Button
-                onClick={handleNext}
-                disabled={isLoading}
-                className="w-full"
-                size="lg"
-              >
-                {isLoading ? "Envoi..." : "Recevoir le code"}
-              </Button>
-            </div>
-          )}
-
-          {/* Code Verification */}
-          {step === "code" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <h1 className="text-2xl font-bold mb-2">Vérification</h1>
-                <p className="text-muted-foreground">
-                  Code envoyé au {formData.phone}
-                </p>
-              </div>
-
-              <div>
-                <Label htmlFor="code">Code de vérification</Label>
-                <Input
-                  id="code"
-                  type="text"
-                  placeholder="000000"
-                  value={formData.code}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      code: e.target.value.replace(/\D/g, ""),
-                    })
-                  }
-                  className="text-center text-2xl tracking-widest mt-2"
-                  maxLength={6}
-                />
-              </div>
-
-              <Button
-                onClick={handleNext}
-                disabled={isLoading}
-                className="w-full"
-                size="lg"
-              >
-                {isLoading ? "Vérification..." : "Créer mon compte"}
-              </Button>
-
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setIsLoading(true);
-                  setTimeout(() => {
-                    setIsLoading(false);
-                    toast.success("Code renvoyé !");
-                  }, 1500);
-                }}
-                className="w-full"
-                disabled={isLoading}
-              >
-                Renvoyer le code
-              </Button>
-            </div>
-          )}
 
           <div className="text-center text-sm mt-6">
             <span className="text-muted-foreground">Déjà un compte ? </span>
