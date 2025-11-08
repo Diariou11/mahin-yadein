@@ -1,34 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, User, Car } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [role, setRole] = useState<"passenger" | "driver">("passenger");
+  const { signIn, user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs");
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulation de connexion
-    localStorage.setItem("demo_user_type", role);
-    localStorage.setItem("demo_authenticated", "true");
+    const { error } = await signIn(email, password);
     
-    toast.success("Connexion réussie !");
-    
-    setTimeout(() => {
+    if (error) {
+      toast.error(error.message || "Erreur de connexion");
       setIsLoading(false);
-      if (role === "driver") {
-        navigate("/driver-dashboard");
-      } else {
-        navigate("/home");
-      }
-    }, 500);
+    } else {
+      toast.success("Connexion réussie !");
+      // Navigation handled by useEffect
+    }
   };
 
   return (
@@ -44,62 +55,44 @@ export default function Login() {
 
         <Card className="p-8 animate-scale-in">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold mb-2">Démo - Connexion</h1>
+            <h1 className="text-2xl font-bold mb-2">Connexion</h1>
             <p className="text-muted-foreground">
-              Choisissez votre profil pour la démonstration
+              Connectez-vous à votre compte
             </p>
           </div>
 
-          <div className="space-y-6">
-            <RadioGroup value={role} onValueChange={(v) => setRole(v as "passenger" | "driver")}>
-              <div
-                className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                  role === "passenger" ? "border-primary bg-primary/5" : "border-border"
-                }`}
-                onClick={() => setRole("passenger")}
-              >
-                <RadioGroupItem value="passenger" id="passenger" />
-                <Label htmlFor="passenger" className="flex-1 cursor-pointer">
-                  <div className="flex items-center gap-3">
-                    <User className="w-5 h-5" />
-                    <div>
-                      <div className="font-semibold">Passager</div>
-                      <div className="text-sm text-muted-foreground">
-                        Rechercher et réserver des trajets
-                      </div>
-                    </div>
-                  </div>
-                </Label>
-              </div>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="votre@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-              <div
-                className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                  role === "driver" ? "border-accent bg-accent/5" : "border-border"
-                }`}
-                onClick={() => setRole("driver")}
-              >
-                <RadioGroupItem value="driver" id="driver" />
-                <Label htmlFor="driver" className="flex-1 cursor-pointer">
-                  <div className="flex items-center gap-3">
-                    <Car className="w-5 h-5" />
-                    <div>
-                      <div className="font-semibold">Conducteur</div>
-                      <div className="text-sm text-muted-foreground">
-                        Proposer des trajets et gérer mes réservations
-                      </div>
-                    </div>
-                  </div>
-                </Label>
-              </div>
-            </RadioGroup>
+            <div className="space-y-2">
+              <Label htmlFor="password">Mot de passe</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
             <Button
-              onClick={handleLogin}
+              type="submit"
               disabled={isLoading}
               className="w-full"
               size="lg"
             >
-              {isLoading ? "Connexion..." : "Accéder à la démo"}
+              {isLoading ? "Connexion..." : "Se connecter"}
             </Button>
 
             <div className="text-center text-sm">
@@ -108,7 +101,7 @@ export default function Login() {
                 S'inscrire
               </Link>
             </div>
-          </div>
+          </form>
         </Card>
 
         <p className="text-center text-sm text-primary-foreground/80 mt-6">

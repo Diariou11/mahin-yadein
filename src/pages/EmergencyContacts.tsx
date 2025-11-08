@@ -9,6 +9,23 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const emergencyContactSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Le nom est requis")
+    .max(100, "Le nom ne doit pas dépasser 100 caractères"),
+  phone: z.string()
+    .trim()
+    .min(1, "Le numéro de téléphone est requis")
+    .max(20, "Le numéro ne doit pas dépasser 20 caractères")
+    .regex(/^\+?[0-9\s\-()]+$/, "Format de téléphone invalide"),
+  relationship: z.string()
+    .trim()
+    .min(1, "La relation est requise")
+    .max(50, "La relation ne doit pas dépasser 50 caractères")
+});
 
 interface EmergencyContact {
   id: string;
@@ -50,23 +67,36 @@ export default function EmergencyContacts() {
     e.preventDefault();
     if (!user) return;
 
-    setLoading(true);
-    const { error } = await supabase
-      .from("emergency_contacts")
-      .insert({
-        user_id: user.id,
-        ...newContact,
-      });
+    try {
+      // Validate input
+      const validatedData = emergencyContactSchema.parse(newContact);
 
-    if (error) {
-      toast.error("Erreur lors de l'ajout du contact");
-    } else {
-      toast.success("Contact d'urgence ajouté");
-      setNewContact({ name: "", phone: "", relationship: "" });
-      setShowForm(false);
-      fetchContacts();
+      setLoading(true);
+      const { error } = await supabase
+        .from("emergency_contacts")
+        .insert({
+          user_id: user.id,
+          name: validatedData.name,
+          phone: validatedData.phone,
+          relationship: validatedData.relationship,
+        });
+
+      if (error) {
+        toast.error("Erreur lors de l'ajout du contact");
+      } else {
+        toast.success("Contact d'urgence ajouté");
+        setNewContact({ name: "", phone: "", relationship: "" });
+        setShowForm(false);
+        fetchContacts();
+      }
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error("Erreur lors de la validation");
+      }
     }
-    setLoading(false);
   };
 
   const handleDeleteContact = async (id: string) => {

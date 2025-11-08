@@ -9,6 +9,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { getProfileImage } from "@/utils/avatarHelper";
+import { z } from "zod";
+
+const messageSchema = z.object({
+  content: z.string()
+    .trim()
+    .min(1, "Le message ne peut pas être vide")
+    .max(1000, "Le message ne doit pas dépasser 1000 caractères")
+});
 
 interface Message {
   id: string;
@@ -101,23 +109,35 @@ export default function Chat() {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || loading) return;
+    if (loading) return;
 
-    setLoading(true);
-    const { error } = await supabase
-      .from("messages")
-      .insert({
-        conversation_id: conversationId,
-        sender_id: user?.id,
-        content: newMessage.trim(),
-      });
+    try {
+      // Validate message
+      const validatedData = messageSchema.parse({ content: newMessage });
 
-    if (error) {
-      toast.error("Erreur lors de l'envoi du message");
-    } else {
-      setNewMessage("");
+      setLoading(true);
+      const { error } = await supabase
+        .from("messages")
+        .insert({
+          conversation_id: conversationId,
+          sender_id: user?.id,
+          content: validatedData.content,
+        });
+
+      if (error) {
+        toast.error("Erreur lors de l'envoi du message");
+      } else {
+        setNewMessage("");
+      }
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error("Erreur lors de la validation");
+      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const quickMessages = [
