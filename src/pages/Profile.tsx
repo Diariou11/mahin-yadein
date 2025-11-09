@@ -5,12 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { User, Star, Award, Settings, ChevronRight, History, CreditCard, Bell, HelpCircle, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, userType, signOut } = useAuth();
+  const userType = localStorage.getItem('demo_user_type') || 'passenger';
   const isDriver = userType === "driver";
+  
+  const handleSignOut = () => {
+    localStorage.removeItem('demo_authenticated');
+    localStorage.removeItem('demo_user_type');
+    localStorage.removeItem('demo_email');
+    toast.success("Déconnexion réussie");
+    navigate("/");
+  };
 
   return (
     <Layout>
@@ -134,11 +141,7 @@ export default function Profile() {
 
             <Card 
               className="p-4 cursor-pointer hover:border-destructive transition-all mt-4"
-              onClick={async () => {
-                await signOut();
-                toast.success("Déconnexion réussie");
-                navigate("/");
-              }}
+              onClick={handleSignOut}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">

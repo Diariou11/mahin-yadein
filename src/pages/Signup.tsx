@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,13 +7,11 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, User, Car } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function Signup() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get("type");
-  const { signUp, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,13 +20,7 @@ export default function Signup() {
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      navigate("/home");
-    }
-  }, [user, navigate]);
-
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password || !confirmPassword) {
@@ -48,14 +40,18 @@ export default function Signup() {
 
     setIsLoading(true);
     
-    const { error } = await signUp(email, password, role);
+    // Demo authentication - accept any credentials
+    localStorage.setItem('demo_authenticated', 'true');
+    localStorage.setItem('demo_user_type', role);
+    localStorage.setItem('demo_email', email);
     
-    if (error) {
-      toast.error(error.message || "Erreur lors de l'inscription");
-      setIsLoading(false);
+    toast.success("Compte créé avec succès !");
+    
+    // Navigate to appropriate onboarding
+    if (role === "driver") {
+      navigate("/onboarding-driver");
     } else {
-      toast.success("Compte créé avec succès !");
-      // Navigation handled by useEffect
+      navigate("/onboarding-passenger");
     }
   };
 

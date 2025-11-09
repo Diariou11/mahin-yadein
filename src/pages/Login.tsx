@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,22 +6,14 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      navigate("/home");
-    }
-  }, [user, navigate]);
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -31,15 +23,12 @@ export default function Login() {
 
     setIsLoading(true);
     
-    const { error } = await signIn(email, password);
+    // Demo authentication - accept any credentials
+    localStorage.setItem('demo_authenticated', 'true');
+    localStorage.setItem('demo_email', email);
     
-    if (error) {
-      toast.error(error.message || "Erreur de connexion");
-      setIsLoading(false);
-    } else {
-      toast.success("Connexion réussie !");
-      // Navigation handled by useEffect
-    }
+    toast.success("Connexion réussie !");
+    navigate("/home");
   };
 
   return (
