@@ -17,12 +17,12 @@ export const CTASection = () => {
           Rejoignez la communauté du covoiturage en Guinée
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link to="/signup?type=passenger">
+          <Link to="/login">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6 hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl">
               Devenir Passager <ArrowRight className="ml-2" />
             </Button>
           </Link>
-          <Link to="/signup?type=driver">
+          <Link to="/login">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6 hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl">
               Devenir Conducteur <ArrowRight className="ml-2" />
             </Button>

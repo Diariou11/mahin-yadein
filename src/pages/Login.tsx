@@ -3,20 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ArrowLeft, User, Car } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"passenger" | "driver">("passenger");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
+    if (!phone || !password) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
@@ -25,10 +27,18 @@ export default function Login() {
     
     // Demo authentication - accept any credentials
     localStorage.setItem('demo_authenticated', 'true');
-    localStorage.setItem('demo_email', email);
+    localStorage.setItem('demo_user_type', role);
+    localStorage.setItem('demo_phone', phone);
+    localStorage.setItem('userRole', role);
     
     toast.success("Connexion réussie !");
-    navigate("/home");
+    
+    // Redirect based on role
+    if (role === "driver") {
+      navigate("/driver-dashboard");
+    } else {
+      navigate("/home");
+    }
   };
 
   return (
@@ -46,19 +56,64 @@ export default function Login() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">Connexion</h1>
             <p className="text-muted-foreground">
-              Connectez-vous à votre compte
+              Connectez-vous pour accéder à l'application
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-4">
+              <Label>Type de compte</Label>
+              <RadioGroup value={role} onValueChange={(v) => setRole(v as "passenger" | "driver")}>
+                <div
+                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    role === "passenger" ? "border-primary bg-primary/5" : "border-border"
+                  }`}
+                  onClick={() => setRole("passenger")}
+                >
+                  <RadioGroupItem value="passenger" id="passenger" />
+                  <Label htmlFor="passenger" className="flex-1 cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <User className="w-5 h-5" />
+                      <div>
+                        <div className="font-semibold">Passager</div>
+                        <div className="text-sm text-muted-foreground">
+                          Rechercher et réserver des trajets
+                        </div>
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+
+                <div
+                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    role === "driver" ? "border-accent bg-accent/5" : "border-border"
+                  }`}
+                  onClick={() => setRole("driver")}
+                >
+                  <RadioGroupItem value="driver" id="driver" />
+                  <Label htmlFor="driver" className="flex-1 cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <Car className="w-5 h-5" />
+                      <div>
+                        <div className="font-semibold">Propriétaire de véhicule</div>
+                        <div className="text-sm text-muted-foreground">
+                          Proposer des trajets et gérer mes réservations
+                        </div>
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="phone">Numéro de téléphone</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="votre@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="phone"
+                type="tel"
+                placeholder="+224 XXX XX XX XX"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 required
               />
             </div>
@@ -83,13 +138,6 @@ export default function Login() {
             >
               {isLoading ? "Connexion..." : "Se connecter"}
             </Button>
-
-            <div className="text-center text-sm">
-              <span className="text-muted-foreground">Pas encore de compte ? </span>
-              <Link to="/signup" className="text-primary font-medium hover:underline">
-                S'inscrire
-              </Link>
-            </div>
           </form>
         </Card>
 

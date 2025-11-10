@@ -1,107 +1,60 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { getProfileImage } from "@/utils/avatarHelper";
 
 interface Conversation {
   id: string;
-  trip_id: string;
-  passenger_id: string;
-  driver_id: string;
-  created_at: string;
-  passenger_profile?: any;
-  driver_profile?: any;
-  last_message?: any;
-  unread_count?: number;
+  name: string;
+  lastMessage: string;
+  timestamp: string;
+  unreadCount: number;
+  avatar: string;
 }
+
+// Demo conversations data
+const demoConversations: Conversation[] = [
+  {
+    id: "1",
+    name: "Mamadou Diallo",
+    lastMessage: "J'arrive dans 5 minutes",
+    timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    unreadCount: 2,
+    avatar: "Mamadou Diallo"
+  },
+  {
+    id: "2",
+    name: "Aissatou Bah",
+    lastMessage: "Merci pour le trajet !",
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    unreadCount: 0,
+    avatar: "Aissatou Bah"
+  },
+  {
+    id: "3",
+    name: "Ibrahim Souare",
+    lastMessage: "On se retrouve où exactement ?",
+    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    unreadCount: 1,
+    avatar: "Ibrahim Souare"
+  },
+  {
+    id: "4",
+    name: "Fatoumata Camara",
+    lastMessage: "D'accord, à demain alors",
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    unreadCount: 0,
+    avatar: "Fatoumata Camara"
+  }
+];
 
 export default function Messages() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (user) {
-      fetchConversations();
-      
-      // Subscribe to new messages
-      const channel = supabase
-        .channel('messages')
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'messages'
-          },
-          () => fetchConversations()
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-  }, [user]);
-
-  const fetchConversations = async () => {
-    const { data: convData, error } = await supabase
-      .from("conversations")
-      .select(`
-        *,
-        passenger_profile:profiles!conversations_passenger_id_fkey(*),
-        driver_profile:profiles!conversations_driver_id_fkey(*)
-      `)
-      .or(`passenger_id.eq.${user?.id},driver_id.eq.${user?.id}`)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching conversations:", error);
-      setLoading(false);
-      return;
-    }
-
-    // Fetch last message and unread count for each conversation
-    const conversationsWithMessages = await Promise.all(
-      (convData || []).map(async (conv) => {
-        const { data: lastMsg } = await supabase
-          .from("messages")
-          .select("*")
-          .eq("conversation_id", conv.id)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .single();
-
-        const { count: unreadCount } = await supabase
-          .from("messages")
-          .select("*", { count: "exact", head: true })
-          .eq("conversation_id", conv.id)
-          .eq("is_read", false)
-          .neq("sender_id", user?.id);
-
-        return {
-          ...conv,
-          last_message: lastMsg,
-          unread_count: unreadCount || 0,
-        };
-      })
-    );
-
-    setConversations(conversationsWithMessages);
-    setLoading(false);
-  };
-
-  const getOtherUser = (conv: Conversation) => {
-    return conv.passenger_id === user?.id 
-      ? conv.driver_profile 
-      : conv.passenger_profile;
-  };
+  const [conversations] = useState<Conversation[]>(demoConversations);
+  const [loading] = useState(false);
 
   const formatTime = (timestamp: string) => {
     const now = new Date();
@@ -144,44 +97,41 @@ export default function Messages() {
             </div>
           ) : conversations.length > 0 ? (
             <div className="space-y-3">
-              {conversations.map((conv, index) => {
-                const otherUser = getOtherUser(conv);
-                return (
-                  <Card
-                    key={conv.id}
-                    className="p-4 cursor-pointer hover:border-primary transition-all hover:scale-[1.02] animate-fade-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                    onClick={() => navigate(`/chat/${conv.id}`)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={getProfileImage(otherUser?.full_name || "User")}
-                        alt={otherUser?.full_name || "User"}
-                        className="w-12 h-12 rounded-full object-cover flex-shrink-0"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-semibold truncate">{otherUser?.full_name || "Utilisateur"}</span>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0 ml-2">
-                            <Clock className="w-3 h-3" />
-                            <span>{conv.last_message ? formatTime(conv.last_message.created_at) : ""}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm text-muted-foreground truncate flex-1">
-                            {conv.last_message?.content || "Nouvelle conversation"}
-                          </p>
-                          {conv.unread_count! > 0 && (
-                            <Badge className="flex-shrink-0 bg-primary text-primary-foreground">
-                              {conv.unread_count}
-                            </Badge>
-                          )}
+              {conversations.map((conv, index) => (
+                <Card
+                  key={conv.id}
+                  className="p-4 cursor-pointer hover:border-primary transition-all hover:scale-[1.02] animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => navigate(`/chat/${conv.id}`)}
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={getProfileImage(conv.avatar)}
+                      alt={conv.name}
+                      className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold truncate">{conv.name}</span>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0 ml-2">
+                          <Clock className="w-3 h-3" />
+                          <span>{formatTime(conv.timestamp)}</span>
                         </div>
                       </div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-muted-foreground truncate flex-1">
+                          {conv.lastMessage}
+                        </p>
+                        {conv.unreadCount > 0 && (
+                          <Badge className="flex-shrink-0 bg-primary text-primary-foreground">
+                            {conv.unreadCount}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                  </Card>
-                );
-              })}
+                  </div>
+                </Card>
+              ))}
             </div>
           ) : (
             <div className="text-center py-20 animate-fade-in">

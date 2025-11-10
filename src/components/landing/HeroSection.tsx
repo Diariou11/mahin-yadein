@@ -25,7 +25,7 @@ export const HeroSection = () => {
         {/* Choice Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-12">
           {/* Driver Option */}
-          <Link to="/signup?type=driver" className="group">
+          <Link to="/login" className="group">
             <div className="relative bg-gradient-to-br from-accent/20 via-accent/10 to-background border-2 border-accent/30 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-accent/20 hover:border-accent animate-fade-in overflow-hidden backdrop-blur-sm">
               <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-accent/5 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10">
@@ -46,7 +46,7 @@ export const HeroSection = () => {
           </Link>
 
           {/* Passenger Option */}
-          <Link to="/signup?type=passenger" className="group">
+          <Link to="/login" className="group">
             <div className="relative bg-gradient-to-br from-primary/20 via-primary/10 to-background border-2 border-primary/30 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary animate-fade-in overflow-hidden backdrop-blur-sm" style={{ animationDelay: "0.1s" }}>
               <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10">
